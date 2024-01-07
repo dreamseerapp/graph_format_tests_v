@@ -1,0 +1,250 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 25%;
+                 height: 750px;
+                 background-color: #222222;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 25%;
+                 height: 750px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#563C5C", "font": {"color": "white"}, "id": "creativity", "label": "creativity", "shape": "dot", "title": "creativity"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "exploration", "label": "exploration", "shape": "dot", "title": "exploration"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "success", "label": "success", "shape": "dot", "title": "success"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "ambition", "label": "ambition", "shape": "dot", "title": "ambition"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "strength", "label": "strength", "shape": "dot", "title": "strength"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "resourcefulness", "label": "resourcefulness", "shape": "dot", "title": "resourcefulness"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "determination", "label": "determination", "shape": "dot", "title": "determination"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "resilience", "label": "resilience", "shape": "dot", "title": "resilience"}, {"color": "#800080", "font": {"color": "white"}, "id": "anxiety", "label": "anxiety", "shape": "dot", "title": "anxiety"}, {"color": "#800080", "font": {"color": "white"}, "id": "fear", "label": "fear", "shape": "dot", "title": "fear"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "relationships", "label": "relationships", "shape": "dot", "title": "relationships"}, {"color": "#800080", "font": {"color": "white"}, "id": "powerlessness", "label": "powerlessness", "shape": "dot", "title": "powerlessness"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "flying", "label": "flying", "shape": "dot", "title": "flying"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "responsibility", "label": "responsibility", "shape": "dot", "title": "responsibility"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "pressure", "label": "pressure", "shape": "dot", "title": "pressure"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "change", "label": "change", "shape": "dot", "title": "change"}, {"color": "#800080", "font": {"color": "white"}, "id": "house", "label": "house", "shape": "dot", "title": "house"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "stress", "label": "stress", "shape": "dot", "title": "stress"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "guilt", "label": "guilt", "shape": "dot", "title": "guilt"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "uncertainty", "label": "uncertainty", "shape": "dot", "title": "uncertainty"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "control", "label": "control", "shape": "dot", "title": "control"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "war", "label": "war", "shape": "dot", "title": "war"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "transition", "label": "transition", "shape": "dot", "title": "transition"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "city", "label": "city", "shape": "dot", "title": "city"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "protection", "label": "protection", "shape": "dot", "title": "protection"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "car", "label": "car", "shape": "dot", "title": "car"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "safety", "label": "safety", "shape": "dot", "title": "safety"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "worry", "label": "worry", "shape": "dot", "title": "worry"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "courage", "label": "courage", "shape": "dot", "title": "courage"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "night", "label": "night", "shape": "dot", "title": "night"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "insecurity", "label": "insecurity", "shape": "dot", "title": "insecurity"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "door", "label": "door", "shape": "dot", "title": "door"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "fire", "label": "fire", "shape": "dot", "title": "fire"}, {"color": "#800080", "font": {"color": "white"}, "id": "water", "label": "water", "shape": "dot", "title": "water"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "expectations", "label": "expectations", "shape": "dot", "title": "expectations"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "school", "label": "school", "shape": "dot", "title": "school"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "security", "label": "security", "shape": "dot", "title": "security"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "obstacles", "label": "obstacles", "shape": "dot", "title": "obstacles"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "tower", "label": "tower", "shape": "dot", "title": "tower"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "failure", "label": "failure", "shape": "dot", "title": "failure"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "transformation", "label": "transformation", "shape": "dot", "title": "transformation"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "challenges", "label": "challenges", "shape": "dot", "title": "challenges"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "fence", "label": "fence", "shape": "dot", "title": "fence"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "window", "label": "window", "shape": "dot", "title": "window"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "identity", "label": "identity", "shape": "dot", "title": "identity"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "struggle", "label": "struggle", "shape": "dot", "title": "struggle"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "frustration", "label": "frustration", "shape": "dot", "title": "frustration"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "authority", "label": "authority", "shape": "dot", "title": "authority"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "validation", "label": "validation", "shape": "dot", "title": "validation"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "anger", "label": "anger", "shape": "dot", "title": "anger"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "cat", "label": "cat", "shape": "dot", "title": "cat"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "death", "label": "death", "shape": "dot", "title": "death"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "challenge", "label": "challenge", "shape": "dot", "title": "challenge"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "growth", "label": "growth", "shape": "dot", "title": "growth"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "knowledge", "label": "knowledge", "shape": "dot", "title": "knowledge"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "wisdom", "label": "wisdom", "shape": "dot", "title": "wisdom"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "library", "label": "library", "shape": "dot", "title": "library"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "risktaking", "label": "risktaking", "shape": "dot", "title": "risktaking"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "forest", "label": "forest", "shape": "dot", "title": "forest"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "train", "label": "train", "shape": "dot", "title": "train"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "adventure", "label": "adventure", "shape": "dot", "title": "adventure"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "mountain", "label": "mountain", "shape": "dot", "title": "mountain"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "freedom", "label": "freedom", "shape": "dot", "title": "freedom"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "castle", "label": "castle", "shape": "dot", "title": "castle"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "overwhelmed", "label": "overwhelmed", "shape": "dot", "title": "overwhelmed"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "ocean", "label": "ocean", "shape": "dot", "title": "ocean"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "liberation", "label": "liberation", "shape": "dot", "title": "liberation"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "moon", "label": "moon", "shape": "dot", "title": "moon"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "peace", "label": "peace", "shape": "dot", "title": "peace"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "power", "label": "power", "shape": "dot", "title": "power"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "confidence", "label": "confidence", "shape": "dot", "title": "confidence"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "independence", "label": "independence", "shape": "dot", "title": "independence"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "acceptance", "label": "acceptance", "shape": "dot", "title": "acceptance"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "journey", "label": "journey", "shape": "dot", "title": "journey"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "selfdiscovery", "label": "selfdiscovery", "shape": "dot", "title": "selfdiscovery"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "emotions", "label": "emotions", "shape": "dot", "title": "emotions"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "loss", "label": "loss", "shape": "dot", "title": "loss"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "connection", "label": "connection", "shape": "dot", "title": "connection"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "intimacy", "label": "intimacy", "shape": "dot", "title": "intimacy"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "contentment", "label": "contentment", "shape": "dot", "title": "contentment"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "guidance", "label": "guidance", "shape": "dot", "title": "guidance"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "renewal", "label": "renewal", "shape": "dot", "title": "renewal"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "escape", "label": "escape", "shape": "dot", "title": "escape"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "joy", "label": "joy", "shape": "dot", "title": "joy"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "emotional connection", "label": "emotional connection", "shape": "dot", "title": "emotional connection"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "nostalgia", "label": "nostalgia", "shape": "dot", "title": "nostalgia"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "childhood", "label": "childhood", "shape": "dot", "title": "childhood"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "dragon", "label": "dragon", "shape": "dot", "title": "dragon"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "sky", "label": "sky", "shape": "dot", "title": "sky"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "fear failure", "label": "fear failure", "shape": "dot", "title": "fear failure"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "boundaries", "label": "boundaries", "shape": "dot", "title": "boundaries"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "feeling overwhelmed", "label": "feeling overwhelmed", "shape": "dot", "title": "feeling overwhelmed"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "garden", "label": "garden", "shape": "dot", "title": "garden"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "hope", "label": "hope", "shape": "dot", "title": "hope"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "selfcare", "label": "selfcare", "shape": "dot", "title": "selfcare"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "river", "label": "river", "shape": "dot", "title": "river"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "selfempowerment", "label": "selfempowerment", "shape": "dot", "title": "selfempowerment"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "flood", "label": "flood", "shape": "dot", "title": "flood"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "opportunity", "label": "opportunity", "shape": "dot", "title": "opportunity"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "conflict", "label": "conflict", "shape": "dot", "title": "conflict"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "conformity", "label": "conformity", "shape": "dot", "title": "conformity"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "road", "label": "road", "shape": "dot", "title": "road"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "mercy", "label": "mercy", "shape": "dot", "title": "mercy"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "compassion", "label": "compassion", "shape": "dot", "title": "compassion"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "society", "label": "society", "shape": "dot", "title": "society"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "shared humanity", "label": "shared humanity", "shape": "dot", "title": "shared humanity"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "spirituality", "label": "spirituality", "shape": "dot", "title": "spirituality"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "wind", "label": "wind", "shape": "dot", "title": "wind"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "nurturing", "label": "nurturing", "shape": "dot", "title": "nurturing"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "helplessness", "label": "helplessness", "shape": "dot", "title": "helplessness"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "confusion", "label": "confusion", "shape": "dot", "title": "confusion"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "judgement", "label": "judgement", "shape": "dot", "title": "judgement"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "murder", "label": "murder", "shape": "dot", "title": "murder"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "smoke", "label": "smoke", "shape": "dot", "title": "smoke"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "autonomy", "label": "autonomy", "shape": "dot", "title": "autonomy"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "insecurities", "label": "insecurities", "shape": "dot", "title": "insecurities"}, {"color": "#563C5C", "font": {"color": "white"}, "id": "past relationships", "label": "past relationships", "shape": "dot", "title": "past relationships"}]);
+                  edges = new vis.DataSet([{"from": "creativity", "to": "exploration", "value": 2}, {"from": "creativity", "to": "success", "value": 2}, {"from": "exploration", "to": "relationships", "value": 3}, {"from": "exploration", "to": "challenge", "value": 2}, {"from": "exploration", "to": "risktaking", "value": 3}, {"from": "exploration", "to": "forest", "value": 2}, {"from": "exploration", "to": "strength", "value": 3}, {"from": "exploration", "to": "train", "value": 2}, {"from": "exploration", "to": "adventure", "value": 3}, {"from": "exploration", "to": "growth", "value": 4}, {"from": "exploration", "to": "change", "value": 2}, {"from": "exploration", "to": "transformation", "value": 2}, {"from": "exploration", "to": "courage", "value": 2}, {"from": "exploration", "to": "house", "value": 2}, {"from": "exploration", "to": "mountain", "value": 2}, {"from": "success", "to": "ambition", "value": 2}, {"from": "success", "to": "fear", "value": 2}, {"from": "success", "to": "challenge", "value": 2}, {"from": "success", "to": "power", "value": 2}, {"from": "success", "to": "confidence", "value": 2}, {"from": "success", "to": "water", "value": 2}, {"from": "success", "to": "city", "value": 2}, {"from": "success", "to": "school", "value": 2}, {"from": "success", "to": "tower", "value": 2}, {"from": "ambition", "to": "strength", "value": 2}, {"from": "strength", "to": "fear", "value": 2}, {"from": "strength", "to": "confidence", "value": 2}, {"from": "strength", "to": "courage", "value": 5}, {"from": "strength", "to": "fire", "value": 2}, {"from": "strength", "to": "resilience", "value": 3}, {"from": "strength", "to": "dragon", "value": 2}, {"from": "strength", "to": "forest", "value": 2}, {"from": "strength", "to": "transformation", "value": 3}, {"from": "strength", "to": "house", "value": 2}, {"from": "strength", "to": "mountain", "value": 2}, {"from": "resourcefulness", "to": "determination", "value": 2}, {"from": "resourcefulness", "to": "resilience", "value": 2}, {"from": "resilience", "to": "journey", "value": 2}, {"from": "resilience", "to": "house", "value": 2}, {"from": "resilience", "to": "courage", "value": 4}, {"from": "resilience", "to": "forest", "value": 3}, {"from": "resilience", "to": "challenges", "value": 2}, {"from": "anxiety", "to": "fear", "value": 7}, {"from": "anxiety", "to": "relationships", "value": 3}, {"from": "anxiety", "to": "powerlessness", "value": 5}, {"from": "anxiety", "to": "flying", "value": 2}, {"from": "anxiety", "to": "responsibility", "value": 4}, {"from": "anxiety", "to": "pressure", "value": 2}, {"from": "anxiety", "to": "change", "value": 2}, {"from": "anxiety", "to": "house", "value": 2}, {"from": "anxiety", "to": "stress", "value": 3}, {"from": "anxiety", "to": "guilt", "value": 2}, {"from": "anxiety", "to": "uncertainty", "value": 5}, {"from": "anxiety", "to": "control", "value": 3}, {"from": "anxiety", "to": "war", "value": 3}, {"from": "anxiety", "to": "transition", "value": 3}, {"from": "anxiety", "to": "city", "value": 4}, {"from": "anxiety", "to": "protection", "value": 5}, {"from": "anxiety", "to": "car", "value": 2}, {"from": "anxiety", "to": "safety", "value": 2}, {"from": "anxiety", "to": "worry", "value": 2}, {"from": "fear", "to": "powerlessness", "value": 4}, {"from": "fear", "to": "uncertainty", "value": 2}, {"from": "fear", "to": "courage", "value": 2}, {"from": "fear", "to": "night", "value": 2}, {"from": "fear", "to": "war", "value": 4}, {"from": "fear", "to": "insecurity", "value": 3}, {"from": "fear", "to": "door", "value": 2}, {"from": "fear", "to": "fire", "value": 2}, {"from": "fear", "to": "water", "value": 2}, {"from": "fear", "to": "protection", "value": 4}, {"from": "fear", "to": "expectations", "value": 2}, {"from": "fear", "to": "school", "value": 2}, {"from": "fear", "to": "security", "value": 2}, {"from": "fear", "to": "house", "value": 4}, {"from": "fear", "to": "obstacles", "value": 2}, {"from": "fear", "to": "control", "value": 2}, {"from": "fear", "to": "tower", "value": 2}, {"from": "fear", "to": "failure", "value": 2}, {"from": "fear", "to": "transformation", "value": 2}, {"from": "relationships", "to": "challenges", "value": 2}, {"from": "relationships", "to": "change", "value": 3}, {"from": "powerlessness", "to": "protection", "value": 4}, {"from": "powerlessness", "to": "night", "value": 2}, {"from": "powerlessness", "to": "obstacles", "value": 2}, {"from": "powerlessness", "to": "car", "value": 4}, {"from": "powerlessness", "to": "city", "value": 2}, {"from": "powerlessness", "to": "fence", "value": 2}, {"from": "powerlessness", "to": "window", "value": 2}, {"from": "powerlessness", "to": "identity", "value": 2}, {"from": "powerlessness", "to": "struggle", "value": 2}, {"from": "powerlessness", "to": "war", "value": 2}, {"from": "powerlessness", "to": "frustration", "value": 2}, {"from": "powerlessness", "to": "authority", "value": 2}, {"from": "powerlessness", "to": "validation", "value": 2}, {"from": "powerlessness", "to": "anger", "value": 3}, {"from": "powerlessness", "to": "uncertainty", "value": 2}, {"from": "flying", "to": "dragon", "value": 2}, {"from": "flying", "to": "sky", "value": 2}, {"from": "responsibility", "to": "protection", "value": 2}, {"from": "responsibility", "to": "guilt", "value": 4}, {"from": "responsibility", "to": "water", "value": 2}, {"from": "responsibility", "to": "control", "value": 2}, {"from": "responsibility", "to": "school", "value": 2}, {"from": "responsibility", "to": "conformity", "value": 2}, {"from": "responsibility", "to": "identity", "value": 2}, {"from": "responsibility", "to": "change", "value": 2}, {"from": "change", "to": "challenge", "value": 2}, {"from": "change", "to": "power", "value": 2}, {"from": "change", "to": "journey", "value": 2}, {"from": "change", "to": "guidance", "value": 2}, {"from": "change", "to": "house", "value": 5}, {"from": "change", "to": "water", "value": 3}, {"from": "change", "to": "conflict", "value": 2}, {"from": "change", "to": "car", "value": 2}, {"from": "change", "to": "transition", "value": 2}, {"from": "change", "to": "growth", "value": 2}, {"from": "change", "to": "school", "value": 2}, {"from": "house", "to": "nostalgia", "value": 3}, {"from": "house", "to": "night", "value": 3}, {"from": "house", "to": "boundaries", "value": 2}, {"from": "house", "to": "car", "value": 4}, {"from": "house", "to": "city", "value": 2}, {"from": "house", "to": "transition", "value": 2}, {"from": "house", "to": "uncertainty", "value": 2}, {"from": "house", "to": "door", "value": 3}, {"from": "house", "to": "feeling overwhelmed", "value": 2}, {"from": "house", "to": "control", "value": 3}, {"from": "house", "to": "security", "value": 2}, {"from": "house", "to": "transformation", "value": 3}, {"from": "house", "to": "garden", "value": 2}, {"from": "house", "to": "hope", "value": 2}, {"from": "house", "to": "courage", "value": 2}, {"from": "house", "to": "mountain", "value": 2}, {"from": "guilt", "to": "failure", "value": 3}, {"from": "uncertainty", "to": "protection", "value": 2}, {"from": "uncertainty", "to": "transition", "value": 2}, {"from": "control", "to": "protection", "value": 3}, {"from": "control", "to": "overwhelmed", "value": 3}, {"from": "control", "to": "power", "value": 2}, {"from": "control", "to": "confidence", "value": 2}, {"from": "control", "to": "water", "value": 2}, {"from": "control", "to": "city", "value": 2}, {"from": "control", "to": "transformation", "value": 2}, {"from": "control", "to": "independence", "value": 2}, {"from": "control", "to": "car", "value": 2}, {"from": "control", "to": "tower", "value": 2}, {"from": "war", "to": "protection", "value": 2}, {"from": "war", "to": "challenge", "value": 2}, {"from": "war", "to": "night", "value": 2}, {"from": "war", "to": "courage", "value": 3}, {"from": "war", "to": "city", "value": 3}, {"from": "war", "to": "mercy", "value": 2}, {"from": "war", "to": "compassion", "value": 2}, {"from": "war", "to": "society", "value": 2}, {"from": "war", "to": "shared humanity", "value": 2}, {"from": "transition", "to": "car", "value": 2}, {"from": "transition", "to": "hope", "value": 2}, {"from": "city", "to": "protection", "value": 2}, {"from": "city", "to": "night", "value": 2}, {"from": "city", "to": "car", "value": 3}, {"from": "city", "to": "train", "value": 2}, {"from": "protection", "to": "cat", "value": 2}, {"from": "protection", "to": "death", "value": 2}, {"from": "protection", "to": "transformation", "value": 3}, {"from": "protection", "to": "door", "value": 2}, {"from": "protection", "to": "safety", "value": 2}, {"from": "car", "to": "night", "value": 2}, {"from": "car", "to": "window", "value": 2}, {"from": "car", "to": "identity", "value": 2}, {"from": "car", "to": "hope", "value": 2}, {"from": "car", "to": "feeling overwhelmed", "value": 2}, {"from": "courage", "to": "challenge", "value": 2}, {"from": "courage", "to": "water", "value": 2}, {"from": "courage", "to": "forest", "value": 2}, {"from": "courage", "to": "dragon", "value": 2}, {"from": "courage", "to": "mountain", "value": 3}, {"from": "courage", "to": "transformation", "value": 2}, {"from": "night", "to": "forest", "value": 2}, {"from": "night", "to": "death", "value": 2}, {"from": "fire", "to": "river", "value": 2}, {"from": "water", "to": "overwhelmed", "value": 2}, {"from": "water", "to": "ocean", "value": 2}, {"from": "water", "to": "journey", "value": 2}, {"from": "water", "to": "liberation", "value": 2}, {"from": "water", "to": "fear failure", "value": 2}, {"from": "water", "to": "selfcare", "value": 2}, {"from": "water", "to": "river", "value": 2}, {"from": "water", "to": "sky", "value": 2}, {"from": "water", "to": "selfempowerment", "value": 2}, {"from": "water", "to": "mountain", "value": 2}, {"from": "water", "to": "flood", "value": 2}, {"from": "water", "to": "tower", "value": 2}, {"from": "water", "to": "train", "value": 2}, {"from": "school", "to": "independence", "value": 2}, {"from": "obstacles", "to": "fence", "value": 2}, {"from": "transformation", "to": "dragon", "value": 2}, {"from": "identity", "to": "judgement", "value": 2}, {"from": "validation", "to": "opportunity", "value": 2}, {"from": "death", "to": "murder", "value": 2}, {"from": "challenge", "to": "growth", "value": 2}, {"from": "growth", "to": "nurturing", "value": 2}, {"from": "knowledge", "to": "wisdom", "value": 2}, {"from": "knowledge", "to": "library", "value": 2}, {"from": "wisdom", "to": "library", "value": 2}, {"from": "risktaking", "to": "freedom", "value": 2}, {"from": "risktaking", "to": "castle", "value": 2}, {"from": "forest", "to": "road", "value": 2}, {"from": "train", "to": "adventure", "value": 2}, {"from": "freedom", "to": "overwhelmed", "value": 2}, {"from": "freedom", "to": "ocean", "value": 2}, {"from": "freedom", "to": "liberation", "value": 2}, {"from": "freedom", "to": "moon", "value": 3}, {"from": "freedom", "to": "peace", "value": 2}, {"from": "overwhelmed", "to": "ocean", "value": 2}, {"from": "liberation", "to": "moon", "value": 2}, {"from": "liberation", "to": "sky", "value": 2}, {"from": "power", "to": "confidence", "value": 2}, {"from": "power", "to": "independence", "value": 2}, {"from": "acceptance", "to": "journey", "value": 2}, {"from": "acceptance", "to": "selfdiscovery", "value": 2}, {"from": "acceptance", "to": "emotions", "value": 2}, {"from": "acceptance", "to": "loss", "value": 2}, {"from": "acceptance", "to": "connection", "value": 2}, {"from": "acceptance", "to": "intimacy", "value": 2}, {"from": "acceptance", "to": "contentment", "value": 2}, {"from": "journey", "to": "selfdiscovery", "value": 2}, {"from": "loss", "to": "helplessness", "value": 2}, {"from": "loss", "to": "confusion", "value": 2}, {"from": "connection", "to": "intimacy", "value": 2}, {"from": "connection", "to": "helplessness", "value": 2}, {"from": "renewal", "to": "escape", "value": 2}, {"from": "joy", "to": "emotional connection", "value": 2}, {"from": "nostalgia", "to": "childhood", "value": 2}, {"from": "feeling overwhelmed", "to": "smoke", "value": 2}, {"from": "spirituality", "to": "wind", "value": 2}, {"from": "smoke", "to": "autonomy", "value": 2}, {"from": "insecurities", "to": "past relationships", "value": 2}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
